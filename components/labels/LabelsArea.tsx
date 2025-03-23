@@ -61,13 +61,13 @@ export const LabelsArea: React.FC<LabelsAreaProps> = ({
           We can ensure there's enough space so the right side isn't cut off.
         */}
         <Box
-          px="0.20in"
+          px="0.25in"
           py="0.25in"
           display="grid"
           gridTemplateColumns="repeat(3, 2.65in)"
           gridAutoRows="0.8in"
           // Slight gap between columns & rows
-          gridColumnGap="0.03in"
+          gridColumnGap="0.01in"
           gridRowGap="0.03in"
           gridAutoFlow="row"
           width="auto"
