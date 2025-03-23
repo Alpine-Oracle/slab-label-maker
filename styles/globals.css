@@ -1,0 +1,91 @@
+/* styles/globals.css */
+
+/* 
+  You can place general/global styles here, if needed, 
+  that apply to the entire site outside of printing context.
+*/
+
+/* Print-only overrides */
+@media print {
+  /**
+     * @page: 
+     * Forces the printer to use US Letter size (8.5" x 11") 
+     * with zero margin. This helps us align the .paper-mock area exactly.
+     */
+  @page {
+    size: letter;
+    margin: 0;
+  }
+
+  /**
+     * .no-print:
+     * Hide any elements tagged with this class in print mode 
+     * (like headers, sidebars, or other UI).
+     */
+  .no-print {
+    display: none !important;
+  }
+
+  /**
+     * body:
+     * Remove default margins/padding, set a white background 
+     * so that the printed page is clean and not tinted by the site’s background.
+     */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  /**
+     * Hide EVERYTHING by default. We'll selectively re-show .paper-mock.
+     * Doing this with "visibility" ensures layout inside .paper-mock doesn't break.
+     */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /**
+     * Reveal .paper-mock and all of its children. 
+     * This is our 8.5" x 11" "page" container. 
+     * The user picks "Actual Size" in the print dialog for perfect scale.
+     */
+  .paper-mock,
+  .paper-mock * {
+    visibility: visible !important;
+  }
+
+  /**
+     * Pin .paper-mock to (0,0) so it starts at the top-left corner, 
+     * removing any leftover page offsets. 
+     * width & height set to 8.5" & 11" for a full letter page.
+     */
+  .paper-mock {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    width: 8.5in !important;
+    height: 11in !important;
+    overflow: visible !important;
+  }
+
+  /**
+     * .nextjs-portal:
+     * Typically used by Chakra UI or Next.js for modals & tooltips. 
+     * We hide them to avoid printing overlays or extra UI.
+     */
+  .nextjs-portal {
+    display: none !important;
+  }
+
+  /*
+      (Optional) If your "labels-area-container" 
+      has screen padding you want to remove in print mode, 
+      uncomment this:
+  
+      .labels-area-container {
+        padding: 0 !important;
+      }
+    */
+}
