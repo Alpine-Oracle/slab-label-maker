@@ -4,9 +4,19 @@ Create, customize, and print **PSA-like** labels for **any slabbed or graded car
 
 ---
 
+## Live Demo & GitHub
+
+- **Live Demo**: [slab-label-maker.vercel.app](https://slab-label-maker.vercel.app/)
+- **GitHub**: [github.com/Alpine-Oracle/slab-label-maker](https://github.com/Alpine-Oracle/slab-label-maker)
+
+Visit the live site to try it out instantly, or clone the repo for local development and customization.
+
+---
+
 ## Table of Contents
 
 - [Slab Label Maker](#slab-label-maker)
+  - [Live Demo \& GitHub](#live-demo--github)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Features](#features)
