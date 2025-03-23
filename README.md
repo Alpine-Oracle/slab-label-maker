@@ -12,6 +12,15 @@ Create, customize, and print **PSA-like** labels for **any slabbed or graded car
   - [Features](#features)
   - [Technologies](#technologies)
   - [Getting Started](#getting-started)
+  - [Project Structure](#project-structure)
+  - [Printing \& Margins](#printing--margins)
+  - [Border Customization](#border-customization)
+  - [Example Supplies](#example-supplies)
+  - [Future Improvements](#future-improvements)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Dev Note](#dev-note)
+  - [Disclaimer](#disclaimer)
 
 ---
 
@@ -56,8 +65,6 @@ All site text uses **Press Start 2P** (fun, retro aesthetic), while actual label
    git clone https://github.com/Alpine-Oracle/slab-label-maker.git
    cd slab-label-maker
    ```
-
-
 
 2. **Install dependencies**:
 
@@ -177,12 +184,10 @@ I originally built this as a quick solution for a friend’s request to generate
 
 _I may also explore **NFT integration** in the future, letting you reference or mint each slab label on-chain, tying a digital component to your physical collection._
 
-*Signed by alpine* — a small gift for card collectors seeking a custom label solution!
-
+_Signed by alpine_ — a small gift for card collectors seeking a custom label solution!
 
 ---
 
 ## Disclaimer
 
 This project is **not affiliated** with PSA or any official grading service. Use at your own discretion for personal or hobbyist purposes.
-
