@@ -57,7 +57,7 @@ All site text uses **Press Start 2P** (fun, retro aesthetic), while actual label
    cd slab-label-maker
    ```
 
-````
+
 
 2. **Install dependencies**:
 
@@ -185,4 +185,4 @@ _I may also explore **NFT integration** in the future, letting you reference or 
 ## Disclaimer
 
 This project is **not affiliated** with PSA or any official grading service. Use at your own discretion for personal or hobbyist purposes.
-````
+
