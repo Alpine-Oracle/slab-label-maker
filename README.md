@@ -153,8 +153,8 @@ All site text uses **Press Start 2P** (fun, retro aesthetic), while actual label
 
 1. **Graded Slabs / Resealable Sleeves**
 
-   - [EVORETRO Graded Resealable Sleeves (Amazon.ca)](https://www.amazon.ca/EVORETRO-Graded-Resealable-Sleeves-Archival-Safe/dp/B0DT1871CC/)
-     Keep your slabbed cards safe from dust or scratches.
+   - [Empty Slabs (Amazon.ca)](https://www.amazon.ca/Empty-Graded-Trading-Sports-Cards/dp/B0D37BHK81/)
+     Empty slabs to apply your labels to.
 
 2. **Full-Sheet Shipping Labels**
    - [LIKED Full Sheet Shipping Labels (Amazon.ca)](https://www.amazon.ca/LIKED-Full-Sheet-Shipping-Labelsfor-Printer-30/dp/B0CFY6CCR8/)
