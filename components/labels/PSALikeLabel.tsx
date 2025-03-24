@@ -5,7 +5,10 @@ import { Box, Text } from "@chakra-ui/react";
 import { useLabelContext } from "@/context/LabelContext";
 
 /**
- * LabelProps defines the user-entered data for a single label.
+ * LabelProps
+ * ----------------------------------------------------------------------------
+ * Defines user-entered data for a single label: 
+ * year/set, player, variation, card number, grade, etc.
  */
 export interface LabelProps {
   yearSetLine?: string;
@@ -19,8 +22,9 @@ export interface LabelProps {
 /**
  * PSALikeLabel
  * ----------------------------------------------------------------------------
- * Renders a single slab label ~2.65in x 0.8in, using a forced font size of 12px 
- * and "Roboto" font. We also apply the user-defined border from context.
+ * Renders a fixed-size ~2.65in x 0.8in label with "Roboto" font, 12px size,
+ * forcing letter-spacing, color, etc. We ignore the global theme here,
+ * ensuring all brand or global overrides do not affect the actual label text.
  */
 export const PSALikeLabel: React.FC<LabelProps> = ({
   yearSetLine = "",
@@ -32,7 +36,7 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
 }) => {
   const { borderColor, borderSize } = useLabelContext();
 
-  // Convert borderSize & borderColor into a valid CSS border
+  // Determine user-chosen border or none
   const finalBorder =
     borderSize > 0 && borderColor
       ? `${borderSize}px solid ${borderColor}`
@@ -40,28 +44,27 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
 
   return (
     <Box
-      // Keep the container at 2.65in x 0.8in
       width="2.65in"
       height="0.8in"
       border={finalBorder}
       display="flex"
       flexDirection="row"
       justifyContent="space-between"
-      p={1}
-      backgroundColor="white"
-      overflow="hidden"
+      style={{
+        // Hardcode padding, background, font styles
+        padding: "4px", // ~Chakra's p={1}
+        backgroundColor: "#ffffff",
+        overflow: "hidden",
 
-      /**
-       * Force a small, fixed font size so brand or global theme 
-       * increases do NOT apply here. 
-       * We also keep "Roboto" for a PSA-like style.
-       */
-      fontFamily="Roboto, sans-serif"
-      fontSize="12px" 
-      lineHeight="1"
-      color="gray.900"
+        // Force "Roboto, 12px" ignoring any theme
+        fontFamily: "Roboto, sans-serif",
+        fontSize: "12px",
+        lineHeight: "1",
+        letterSpacing: "0.5px", // ensures consistent spacing
+        color: "#000000",
+      }}
     >
-      {/* Left Column */}
+      {/* Left column: year/set, player, variation */}
       <Box
         display="flex"
         flexDirection="column"
@@ -69,19 +72,40 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
         maxW="50%"
       >
         {yearSetLine && (
-          <Text fontWeight="700" lineHeight="1">
+          <Text
+            style={{
+              fontWeight: 700,
+              lineHeight: "1",
+              letterSpacing: "0.5px",
+            }}
+          >
             {yearSetLine}
           </Text>
         )}
         {playerLine && (
-          <Text fontWeight="700" lineHeight="1">
+          <Text
+            style={{
+              fontWeight: 700,
+              lineHeight: "1",
+              letterSpacing: "0.5px",
+            }}
+          >
             {playerLine}
           </Text>
         )}
-        {variationLine && <Text lineHeight="1">{variationLine}</Text>}
+        {variationLine && (
+          <Text
+            style={{
+              lineHeight: "1",
+              letterSpacing: "0.5px",
+            }}
+          >
+            {variationLine}
+          </Text>
+        )}
       </Box>
 
-      {/* Right Column */}
+      {/* Right column: card number, grade term, grade number */}
       <Box
         display="flex"
         flexDirection="column"
@@ -90,17 +114,38 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
         maxW="40%"
       >
         {cardNumber && (
-          <Text fontWeight="700" lineHeight="1" textAlign="right">
+          <Text
+            style={{
+              fontWeight: 700,
+              lineHeight: "1",
+              letterSpacing: "0.5px",
+              textAlign: "right",
+            }}
+          >
             {cardNumber}
           </Text>
         )}
         {gradeTerm && (
-          <Text fontWeight="700" lineHeight="1" textAlign="right">
+          <Text
+            style={{
+              fontWeight: 700,
+              lineHeight: "1",
+              letterSpacing: "0.5px",
+              textAlign: "right",
+            }}
+          >
             {gradeTerm}
           </Text>
         )}
         {gradeNumber && (
-          <Text fontWeight="700" lineHeight="1" textAlign="right">
+          <Text
+            style={{
+              fontWeight: 700,
+              lineHeight: "1",
+              letterSpacing: "0.5px",
+              textAlign: "right",
+            }}
+          >
             {gradeNumber}
           </Text>
         )}
