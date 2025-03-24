@@ -4,11 +4,11 @@ import { extendTheme, ThemeConfig, ThemeOverride } from "@chakra-ui/react";
 
 /**
  * Base Chakra config that applies across all brand themes.
- * - initialColorMode: 'light' => default to light mode
+ * - initialColorMode: 'dark' => default to dark mode
  * - useSystemColorMode: false => do not auto-detect OS theme
  */
 const config: ThemeConfig = {
-  initialColorMode: "light",
+  initialColorMode: "dark",
   useSystemColorMode: false,
 };
 
