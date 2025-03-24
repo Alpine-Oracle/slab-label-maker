@@ -1,20 +1,11 @@
-// components/PSALikeLabel.tsx
+// components/labels/PSALikeLabel.tsx
 
 import React from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { useLabelContext } from "@/context/LabelContext";
 
 /**
- * LabelProps defines the user-entered data for a single label:
- *  - yearSetLine: e.g. "1999 Pokémon Base Set"
- *  - playerLine: e.g. "Charizard"
- *  - variationLine: e.g. "Holo"
- *  - cardNumber: e.g. "#4"
- *  - gradeTerm: e.g. "MINT"
- *  - gradeNumber: e.g. "9"
- *
- * This component does not store or update these fields;
- * it simply displays them in a "PSA-like" layout.
+ * LabelProps defines the user-entered data for a single label.
  */
 export interface LabelProps {
   yearSetLine?: string;
@@ -27,10 +18,9 @@ export interface LabelProps {
 
 /**
  * PSALikeLabel
- * -------------
- * Renders a single slab label at ~2.65in x 0.8in (slightly larger
- * than official PSA size to allow for trimming). Uses Roboto
- * for text, ensures the user-defined border is applied from context.
+ * ----------------------------------------------------------------------------
+ * Renders a single slab label ~2.65in x 0.8in, using a forced font size of 12px 
+ * and "Roboto" font. We also apply the user-defined border from context.
  */
 export const PSALikeLabel: React.FC<LabelProps> = ({
   yearSetLine = "",
@@ -40,11 +30,9 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
   gradeTerm = "",
   gradeNumber = "",
 }) => {
-  // Retrieve global border settings (color & size) from the context
   const { borderColor, borderSize } = useLabelContext();
 
-  // If the user sets borderSize=0 or borderColor is blank,
-  // we set 'none' to avoid showing any border.
+  // Convert borderSize & borderColor into a valid CSS border
   const finalBorder =
     borderSize > 0 && borderColor
       ? `${borderSize}px solid ${borderColor}`
@@ -52,7 +40,7 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
 
   return (
     <Box
-      // We choose 2.65" x 0.8" to allow a bit more margin for cutting
+      // Keep the container at 2.65in x 0.8in
       width="2.65in"
       height="0.8in"
       border={finalBorder}
@@ -62,12 +50,18 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
       p={1}
       backgroundColor="white"
       overflow="hidden"
-      // Force Roboto font for clarity at smaller text sizes
+
+      /**
+       * Force a small, fixed font size so brand or global theme 
+       * increases do NOT apply here. 
+       * We also keep "Roboto" for a PSA-like style.
+       */
       fontFamily="Roboto, sans-serif"
-      fontSize="sm"
+      fontSize="12px" 
+      lineHeight="1"
       color="gray.900"
     >
-      {/* Left Column: primarily the year/set, Pokémon name, variation */}
+      {/* Left Column */}
       <Box
         display="flex"
         flexDirection="column"
@@ -87,7 +81,7 @@ export const PSALikeLabel: React.FC<LabelProps> = ({
         {variationLine && <Text lineHeight="1">{variationLine}</Text>}
       </Box>
 
-      {/* Right Column: card number, grade term, and grade number */}
+      {/* Right Column */}
       <Box
         display="flex"
         flexDirection="column"
