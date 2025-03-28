@@ -6,19 +6,24 @@ import {
   Heading,
   Button,
   useToast,
-  Collapse,
   Stack,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
 } from "@chakra-ui/react";
 import { useLabelContext } from "@/context/LabelContext";
 import { LabelFieldsForm } from "./LabelFieldsForm";
 import { BorderSettingsPanel } from "./BorderSettingsPanel";
+import { LabelSizeSettingsPanel } from "./LabelSizeSettingsPanel";
 import { ClearAllDialog } from "../dialogs/ClearAllDialog";
 
 /**
- * FormPanelProps:
- * -----------------
- * - editingIndex: index of the label currently being edited (or null if creating)
- * - setEditingIndex: function to switch between edit mode and create mode
+ * FormPanelProps
+ * ---------------------------------------------------------------------------
+ * - editingIndex: index of the label currently being edited (null if creating)
+ * - setEditingIndex: function that toggles edit mode on/off
  */
 interface FormPanelProps {
   editingIndex: number | null;
@@ -26,26 +31,28 @@ interface FormPanelProps {
 }
 
 /**
- * FormPanel:
- * -----------
- * A top-level component for creating/updating labels and managing global border settings.
- *
- * Features:
- *   1) Toggle "Border Settings" for all labels via BorderSettingsPanel.
- *   2) Input fields for label data (LabelFieldsForm).
- *   3) A "Clear All" dialog to remove all labels from local storage (ClearAllDialog).
- *
- * The Save / Cancel / Clear All buttons can wrap (stack vertically) on small screens
- * if there's not enough horizontal space.
+ * FormPanel
+ * ---------------------------------------------------------------------------
+ * High-level form container providing:
+ *    1) An Accordion to configure global label settings (Border & Size).
+ *    2) A form for creating/updating a label (LabelFieldsForm).
+ *    3) Buttons to Save, Cancel, and "Clear All" labels.
+ *    4) A confirmation dialog for clearing all labels.
  */
 export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
+  /**
+   * useToast: Chakra-UI hook for showing user notifications.
+   * e.g. "Label added!" or "Please enter a Card Name."
+   */
   const toast = useToast();
+
+  /**
+   * We load the label array and CRUD methods from LabelContext,
+   * which handles persistent storage in localStorage, etc.
+   */
   const { labels, addLabel, updateLabel, clearAll } = useLabelContext();
 
-  // Toggles the "Border Settings" collapsible panel
-  const [showBorderMenu, setShowBorderMenu] = useState(false);
-
-  // Local states for label data fields
+  // Local state for each field that belongs to a single label
   const [yearSetLine, setYearSetLine] = useState("");
   const [playerLine, setPlayerLine] = useState("");
   const [variationLine, setVariationLine] = useState("");
@@ -53,18 +60,20 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
   const [gradeTerm, setGradeTerm] = useState("");
   const [gradeNumber, setGradeNumber] = useState("");
 
-  // "Clear All" dialog state
+  /**
+   * "Clear All" dialog state:
+   * - isClearDialogOpen determines whether the modal is visible.
+   * - cancelButtonRef references the cancel button to focus it automatically.
+   */
   const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
-  // Button ref for focusing on "Cancel" in the dialog
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Are we editing an existing label, or creating a new one?
+  // isEditing: derived boolean indicating whether we have a valid editingIndex
   const isEditing = editingIndex !== null;
 
   /**
-   * If editingIndex is valid, load that label's data into our form fields.
-   * If it's null, we keep the existing input states so the user can
-   * create multiple labels in sequence using the same data as a template.
+   * Whenever editingIndex changes (meaning we switched to editing a particular label),
+   * load that label’s existing data into our local form states.
    */
   useEffect(() => {
     if (
@@ -83,12 +92,14 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
   }, [editingIndex, labels]);
 
   /**
-   * handleSave:
-   *   - If editingIndex is null, we create a new label.
-   *   - Otherwise, update the existing label, show a success toast,
-   *     and revert to create mode.
+   * handleSave
+   * -------------------------------------------------------------------------
+   * Validate user input, then either:
+   *   - create a new label if we're not editing, or
+   *   - update the existing label if we are editing.
    */
   const handleSave = () => {
+    // Require at least a year/set or a player line
     if (!yearSetLine && !playerLine) {
       toast({
         title: "Please enter at least a Card Name or Set!",
@@ -100,7 +111,7 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
     }
 
     if (editingIndex === null) {
-      // CREATE mode
+      // CREATE mode: add a new label
       addLabel({
         yearSetLine,
         playerLine,
@@ -109,6 +120,7 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
         gradeTerm,
         gradeNumber,
       });
+
       toast({
         title: "Label added!",
         description: "Your label has been added to the list.",
@@ -117,7 +129,7 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
         isClosable: true,
       });
     } else {
-      // EDIT mode
+      // EDIT mode: update existing label
       updateLabel(editingIndex, {
         yearSetLine,
         playerLine,
@@ -126,6 +138,7 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
         gradeTerm,
         gradeNumber,
       });
+
       toast({
         title: "Label updated!",
         description: `Label #${editingIndex + 1} has been updated.`,
@@ -133,37 +146,49 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
         duration: 2000,
         isClosable: true,
       });
+
+      // Return to create mode
       setEditingIndex(null);
     }
   };
 
-  // Cancels editing -> revert to create mode
+  /**
+   * handleCancelEdit
+   * -------------------------------------------------------------------------
+   * Cancels editing and reverts to the initial create mode.
+   */
   const handleCancelEdit = () => {
     setEditingIndex(null);
   };
 
-  // Opens the "Clear All" confirmation dialog
+  /**
+   * handleClearAllClick
+   * -------------------------------------------------------------------------
+   * Opens the confirmation dialog to clear all labels from localStorage.
+   */
   const handleClearAllClick = () => {
     setIsClearDialogOpen(true);
   };
 
   /**
-   * handleConfirmClearAll:
-   *   - Clears all labels from context,
-   *   - resets local fields if desired,
-   *   - shows a toast message.
+   * handleConfirmClearAll
+   * -------------------------------------------------------------------------
+   * Called if user confirms clearing all labels.
+   * It removes all labels from storage, resets form fields, and shows a toast.
    */
   const handleConfirmClearAll = () => {
     clearAll();
     setIsClearDialogOpen(false);
     setEditingIndex(null);
-    // Optionally reset form fields
+
+    // (Optional) Reset all form fields to blank
     setYearSetLine("");
     setPlayerLine("");
     setVariationLine("");
     setCardNumber("");
     setGradeTerm("");
     setGradeNumber("");
+
     toast({
       title: "All labels cleared.",
       status: "info",
@@ -172,7 +197,11 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
     });
   };
 
-  // Closes the "Clear All" dialog without clearing
+  /**
+   * handleCancelClearAll
+   * -------------------------------------------------------------------------
+   * Closes the "Clear All" confirmation dialog without deleting data.
+   */
   const handleCancelClearAll = () => {
     setIsClearDialogOpen(false);
   };
@@ -187,26 +216,48 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
       height="calc(100vh - 4rem)"
       overflowY="auto"
     >
+      {/* Form heading: "Edit Label" (if editing) or "Create Label" (if new) */}
       <Heading size="md" mb={2} color="brand.600">
         {isEditing ? "Edit Label" : "Create Label"}
       </Heading>
 
-      {/* Toggle border settings panel (applies to all labels) */}
-      <Button
-        size="sm"
-        variant="outline"
-        mb={2}
-        onClick={() => setShowBorderMenu(!showBorderMenu)}
-      >
-        {showBorderMenu ? "Hide Border Settings" : "Show Border Settings"}
-      </Button>
+      {/*
+       * Accordion for global label settings
+       *   1) BorderSettingsPanel
+       *   2) LabelSizeSettingsPanel
+       */}
+      <Accordion allowMultiple mb={4}>
+        {/* BORDER SETTINGS */}
+        <AccordionItem>
+          <AccordionButton>
+            <Box flex="1" textAlign="left">
+              Border Settings
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4}>
+            <BorderSettingsPanel />
+          </AccordionPanel>
+        </AccordionItem>
 
-      {/* Collapsible border configuration UI */}
-      <Collapse in={showBorderMenu} animateOpacity>
-        <BorderSettingsPanel />
-      </Collapse>
+        {/* LABEL SIZE SETTINGS */}
+        <AccordionItem>
+          <AccordionButton>
+            <Box flex="1" textAlign="left">
+              Label Size Settings
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4}>
+            <LabelSizeSettingsPanel />
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
 
-      {/* The form fields for label data */}
+      {/*
+       * Form fields for the label’s text lines: 
+       * year/set, player, variation, card number, grade, etc.
+       */}
       <LabelFieldsForm
         yearSetLine={yearSetLine}
         setYearSetLine={setYearSetLine}
@@ -222,7 +273,12 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
         setGradeNumber={setGradeNumber}
       />
 
-      {/* Buttons to Save, Cancel (if editing), or Clear All. Stack on mobile. */}
+      {/*
+       * Buttons for:
+       *   - Save / Add (dependent on editing vs. create)
+       *   - Cancel editing (only visible if isEditing)
+       *   - Clear All -> opens confirmation dialog
+       */}
       <Box pt={4}>
         <Stack direction={{ base: "column", md: "row" }} spacing={3}>
           <Button onClick={handleSave}>
@@ -245,7 +301,10 @@ export function FormPanel({ editingIndex, setEditingIndex }: FormPanelProps) {
         </Stack>
       </Box>
 
-      {/* Confirmation dialog for removing all labels */}
+      {/*
+       * Confirmation dialog for removing all labels from storage.
+       * We pass in the isOpen state and the respective confirm/cancel handlers.
+       */}
       <ClearAllDialog
         isOpen={isClearDialogOpen}
         leastDestructiveRef={cancelButtonRef}
