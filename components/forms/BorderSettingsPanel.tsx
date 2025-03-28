@@ -63,10 +63,6 @@ export function BorderSettingsPanel(_: BorderSettingsPanelProps) {
       mb={2}
       borderRadius="md"
     >
-      <Heading size="sm" mb={2}>
-        Border Settings
-      </Heading>
-
       <FormControl mb={2}>
         <FormLabel>Color</FormLabel>
         <Input type="color" value={borderColor} onChange={handleColorChange} />
